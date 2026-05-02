@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>Multi‑Loan EMI Dashboard | Fintech Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --r: 12px;
+      --rs: 8px;
+      --rx: 5px;
+    }
+    [data-theme="dark"] {
+      --bg: #080a0f;
+      --bg2: #0e1117;
+      --sur: #111520;
+      --sur2: #161b28;
+      --sur3: #1d2436;
+      --sur4: #242c3d;
+      --bd: rgba(255, 255, 255, 0.06);
+      --bd2: rgba(255, 255, 255, 0.11);
+      --bd3: rgba(255, 255, 255, 0.18);
+      --tx: #eceef4;
+      --tx2: #9aa0b8;
+      --tx3: #5c6280;
+      --ac: #5b8ff9;
+      --acg: rgba(91, 143, 249, 0.15);
+      --gr: #34d399;
+      --grb: rgba(52, 211, 153, 0.1);
+      --rd: #f87171;
+      --rdb: rgba(248, 113, 113, 0.1);
+      --am: #fbbf24;
+      --amb: rgba(251, 191, 36, 0.1);
+      --pu: #a78bfa;
+      --pub: rgba(167, 139, 250, 0.1);
+      --sh: 0 4px 24px rgba(0, 0, 0, 0.4);
+    }
+    [data-theme="light"] {
+      --bg: #f0f2f7;
+      --bg2: #e8ebf2;
+      --sur: #ffffff;
+      --sur2: #f5f6fa;
+      --sur3: #eceef5;
+      --sur4: #e4e7f0;
+      --bd: rgba(0, 0, 0, 0.07);
+      --bd2: rgba(0, 0, 0, 0.12);
+      --bd3: rgba(0, 0, 0, 0.2);
+      --tx: #0f1120;
+      --tx2: #4a5070;
+      --tx3: #8890aa;
+      --ac: #3b6ff0;
+      --acg: rgba(59, 111, 240, 0.1);
+      --gr: #059669;
+      --grb: rgba(5, 150, 105, 0.08);
+      --rd: #dc2626;
+      --rdb: rgba(220, 38, 38, 0.08);
+      --am: #d97706;
+      --amb: rgba(217, 119, 6, 0.08);
+      --pu: #7c3aed;
+      --pub: rgba(124, 58, 237, 0.08);
+      --sh: 0 4px 24px rgba(0, 0, 0, 0.08);
+    }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--tx);
+      min-height: 100vh;
+      font-size: 14px;
+      line-height: 1.6;
+      transition: background .3s, color .3s;
+      margin: 0;
+    }
+    .app {
+      width: 100%;
+      max-width: 100%;
+      padding: 0 16px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 14px 0 8px;
+      border-bottom: 1px solid var(--bd);
+      margin-bottom: 4px;
+    }
+    .logo-area {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--tx);
+      white-space: nowrap;
+    }
+    .logo em {
+      color: var(--ac);
+      font-style: normal;
+    }
+    .dev-badge {
+      font-size: 11px;
+      color: var(--tx3);
+      background: var(--sur2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--bd2);
+    }
+    .dev-badge strong {
+      color: var(--ac);
+      font-weight: 600;
+    }
+    .head-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .theme-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--sur2);
+      border: 1px solid var(--bd2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all .2s;
+      flex-shrink: 0;
+    }
+    .theme-btn:hover {
+      background: var(--sur3);
+    }
+    .loan-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      background: var(--sur2);
+      padding: 4px;
+      border-radius: var(--rs);
+    }
+    .loan-tab {
+      padding: 6px 15px;
+      border-radius: var(--rx);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--tx3);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      transition: all .2s;
+      font-family: 'Inter', sans-serif;
+      white-space: nowrap;
+    }
+    .loan-tab.active {
+      background: var(--sur);
+      color: var(--tx);
+      border: 1px solid var(--bd2);
+      box-shadow: var(--sh);
+    }
+    .page {
+      display: grid;
+      grid-template-columns: 370px 1fr;
+      min-height: 80vh;
+      width: 100%;
+    }
+    @media(max-width:900px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+    }
+    .sidebar {
+      background: var(--sur);
+      border-right: 1px solid var(--bd);
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      height: 85vh;
+    }
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--sur3);
+      border-radius: 2px;
+    }
+    .main {
+      padding: 18px 20px;
+      background: var(--bg);
+      overflow-y: auto;
+      height: 85vh;
+    }
+    .main::-webkit-scrollbar {
+      width: 4px;
+    }
+    .main::-webkit-scrollbar-thumb {
+      background: var(--sur4);
+      border-radius: 2px;
+    }
+    .sb-head {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--bd);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .sb-sec {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--bd);
+    }
+    .sb-sec:last-child {
+      border-bottom: none;
+    }
+    .sec-lbl {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--tx3);
+      margin-bottom: 10px;
+    }
+    .field {
+      margin-bottom: 11px;
+    }
+    .field:last-child {
+      margin-bottom: 0;
+    }
+    .fl {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--tx2);
+      margin-bottom: 4px;
+    }
+    .fl .v {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--ac);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .inp-row {
+      display: flex;
+      align-items: center;
+      background: var(--sur2);
+      border: 1px solid var(--bd2);
+      border-radius: var(--rs);
+      overflow: hidden;
+      transition: border-color .2s;
+    }
+    .inp-row:focus-within {
+      border-color: var(--ac);
+    }
+    .pfx,
+    .sfx {
+      padding: 0 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--tx3);
+      background: var(--sur3);
+      height: 36px;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      border-right: 1px solid var(--bd);
+      flex-shrink: 0;
+    }
+    .sfx {
+      border-right: none;
+      border-left: 1px solid var(--bd);
+    }
+    input[type=number],
+    select {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--tx);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      padding: 0 10px;
+      height: 36px;
+      width: 100%;
+      -moz-appearance: textfield;
+    }
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+    select {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 36px;
+      background: transparent;
+      cursor: pointer;
+      padding: 0 10px;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      height: 4px;
+      background: var(--sur3);
+      border-radius: 2px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--ac);
+      margin-top: -6px;
+      border: 2px solid var(--sur);
+      box-shadow: 0 0 0 2px var(--acg);
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+    .tg-lbl {
+      font-size: 13px;
+      color: var(--tx);
+      font-weight: 500;
+    }
+    .sw {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .sw input {
+      display: none;
+    }
+    .sw-tr {
+      position: absolute;
+      inset: 0;
+      background: var(--sur3);
+      border-radius: 12px;
+      border: 1px solid var(--bd2);
+      transition: all .25s;
+    }
+    .sw input:checked~.sw-tr {
+      background: var(--ac);
+      border-color: var(--ac);
+    }
+    .sw-th {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      transition: left .25s;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+    }
+    .sw input:checked~.sw-th {
+      left: 20px;
+    }
+    .pp-body {
+      margin-top: 8px;
+      display: none;
+    }
+    .pp-body.open {
+      display: block;
+    }
+    .imp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 10px;
+    }
+    .imp-card {
+      background: var(--sur2);
+      border: 1px solid var(--bd);
+      border-radius: var(--rs);
+      padding: 7px 10px;
+    }
+    .ic-lbl {
+      font-size: 10px;
+      color: var(--tx3);
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .ic-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .ic-val.gr {
+      color: var(--gr);
+    }
+    .ic-val.rd {
+      color: var(--rd);
+    }
+    .ic-val.am {
+      color: var(--am);
+    }
+    .ic-val.ac {
+      color: var(--ac);
+    }
+    .ic-val.pu {
+      color: var(--pu);
+    }
+    .save-strip {
+      background: var(--grb);
+      border: 1px solid rgba(52, 211, 153, .2);
+      border-radius: var(--rs);
+      padding: 8px 11px;
+      margin-top: 10px;
+      display: none;
+      font-size: 11px;
+      color: var(--gr);
+      line-height: 1.7;
+    }
+    .save-strip.show {
+      display: block;
+    }
+    .save-strip strong {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+    }
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    @media(max-width:600px) {
+      .metrics {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .mc {
+      background: var(--sur);
+      border: 1px solid var(--bd);
+      border-radius: var(--r);
+      padding: 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .mc::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 2px 2px 0 0;
+    }
+    .mc.bl::before {
+      background: var(--ac);
+    }
+    .mc.gr::before {
+      background: var(--gr);
+    }
+    .mc.rd::before {
+      background: var(--rd);
+    }
+    .mc.am::before {
+      background: var(--am);
+    }
+    .mc-lbl {
+      font-size: 10px;
+      color: var(--tx3);
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+    .mc-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+    .mc-val.bl {
+      color: var(--ac);
+    }
+    .mc-val.gr {
+      color: var(--gr);
+    }
+    .mc-val.rd {
+      color: var(--rd);
+    }
+    .mc-val.am {
+      color: var(--am);
+    }
+    .mc-sub {
+      font-size: 10px;
+      color: var(--tx3);
+      margin-top: 4px;
+    }
+    .scard {
+      background: var(--sur);
+      border: 1px solid var(--bd);
+      border-radius: var(--r);
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+    .scard-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--tx2);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .donut-row {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .donut-wrap {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      flex-shrink: 0;
+    }
+    .donut-wrap svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+    .donut-ctr {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .d-big {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+    .d-sm {
+      font-size: 10px;
+      color: var(--tx3);
+      margin-top: 2px;
+    }
+    .leg-list {
+      flex: 1;
+      min-width: 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .leg-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+    .leg-name {
+      font-size: 11px;
+      color: var(--tx2);
+    }
+    .leg-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--tx);
+      font-weight: 500;
+    }
+    .leg-pct {
+      font-size: 10px;
+      color: var(--tx3);
+    }
+    .prog-lbl {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--tx3);
+      margin-bottom: 3px;
+    }
+    .prog-track {
+      height: 5px;
+      background: var(--sur3);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .prog-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--gr);
+      transition: width .5s ease;
+    }
+    .prog-note {
+      font-size: 10px;
+      color: var(--tx3);
+    }
+    .bar-legend {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .bl-i {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--tx3);
+    }
+    .bl-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 2px;
+    }
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+    .bar-yr {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--tx3);
+      width: 28px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .bar-track {
+      flex: 1;
+      height: 15px;
+      background: var(--sur3);
+      border-radius: 3px;
+      overflow: hidden;
+      display: flex;
+      cursor: default;
+    }
+    .b-p {
+      height: 100%;
+      background: var(--ac);
+      opacity: .85;
+    }
+    .b-i {
+      height: 100%;
+      background: var(--rd);
+      opacity: .7;
+    }
+    .b-e {
+      height: 100%;
+      background: var(--am);
+      opacity: .8;
+    }
+    .tabs {
+      display: flex;
+      gap: 4px;
+      background: var(--sur2);
+      padding: 4px;
+      border-radius: var(--rs);
+      margin-bottom: 10px;
+      width: fit-content;
+    }
+    .tab {
+      padding: 5px 13px;
+      border-radius: var(--rx);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--tx3);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      transition: all .2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .tab.active {
+      background: var(--sur);
+      color: var(--tx);
+      border: 1px solid var(--bd2);
+      box-shadow: var(--sh);
+    }
+    .tab-pane {
+      display: none;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+    .flt-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .flt-row label {
+      font-size: 11px;
+      color: var(--tx3);
+    }
+    .flt-sel {
+      background: var(--sur2);
+      border: 1px solid var(--bd2);
+      color: var(--tx);
+      padding: 4px 8px;
+      border-radius: var(--rx);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      height: 30px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 500;
+      background: var(--acg);
+      color: var(--ac);
+    }
+    .tbl-wrap {
+      overflow-x: auto;
+      border-radius: var(--rs);
+      border: 1px solid var(--bd);
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .tbl-wrap::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .tbl-wrap::-webkit-scrollbar-thumb {
+      background: var(--sur4);
+      border-radius: 2px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    th {
+      background: var(--sur3);
+      padding: 7px 10px;
+      text-align: right;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      color: var(--tx3);
+      white-space: nowrap;
+      border-bottom: 1px solid var(--bd2);
+    }
+    th:first-child {
+      text-align: left;
+    }
+    td {
+      padding: 6px 10px;
+      text-align: right;
+      border-bottom: 1px solid var(--bd);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      white-space: nowrap;
+      color: var(--tx);
+    }
+    td:first-child {
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      color: var(--tx2);
+      font-size: 11px;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover td {
+      background: var(--sur2);
+    }
+    tr.yr-head td {
+      background: var(--sur2);
+      color: var(--ac);
+      font-family: 'Syne', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .05em;
+      padding: 4px 10px;
+      border-bottom: 1px solid var(--bd);
+    }
+    tr.pp-row {
+      background: rgba(251, 191, 36, .04);
+    }
+    td.t-p {
+      color: var(--ac);
+    }
+    td.t-i {
+      color: var(--rd);
+    }
+    td.t-e {
+      color: var(--am);
+    }
+    td.t-b {
+      color: var(--tx2);
+    }
+    td.t-g {
+      color: var(--gr);
+    }
+    .footer {
+      font-size: 10px;
+      color: var(--tx3);
+      text-align: center;
+      padding: 10px 0 4px;
+      line-height: 1.8;
+      border-top: 1px solid var(--bd);
+      margin-top: 4px;
+    }
+    .total-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    @media(max-width:600px) {
+      .total-summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="top-bar">
+      <div class="logo-area">
+        <span class="logo">Home Loan <em>Calculator</em></span>
+        <span class="dev-badge">by <strong>Mr Shadab Rahman</strong></span>
+      </div>
+      <div class="head-right">
+        <div class="loan-tabs" id="loanTabs"></div>
+        <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+      </div>
+    </div>
+
+    <div id="dashboardContent"></div>
+
+    <div class="footer">
+      ✦ Reducing balance method &nbsp;|&nbsp; Prepayment applied directly to principal &nbsp;|&nbsp; Zero prepayment penalty (floating rate) &nbsp;|&nbsp; Results are indicative &nbsp;|&nbsp; Developer: Mr Shadab Rahman
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const MN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const MF = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+        'November', 'December'
+      ];
+
+      function toggleTheme() {
+        const h = document.documentElement,
+          d = h.getAttribute('data-theme') === 'dark';
+        h.setAttribute('data-theme', d ? 'light' : 'dark');
+        document.getElementById('themeBtn').textContent = d ? '☀️' : '🌙';
+      }
+      window.toggleTheme = toggleTheme;
+
+      const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+
+      function fmtC(n) {
+        n = Math.round(n);
+        if (n >= 10000000) return '₹' + (n / 10000000).toFixed(2) + ' Cr';
+        if (n >= 100000) return '₹' + (n / 100000).toFixed(2) + ' L';
+        return '₹' + n.toLocaleString('en-IN');
+      }
+
+      function fmtT(m) {
+        const y = Math.floor(m / 12),
+          mo = m % 12;
+        return y > 0 ? (y + 'y ' + (mo > 0 ? mo + 'm' : '')).trim() : mo + 'm';
+      }
+
+      function emi(P, r, n) {
+        if (r === 0) return P / n;
+        return P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+      }
+
+      const LOAN_TYPES = ['home', 'education', 'car', 'bike', 'total'];
+      const loanState = {
+        home: { amount: 1500000, rate: 8.35, tenureYrs: 15, startMonth: 7, prepay: false, prepayAmt: 150000,
+          prepayStartYr: 3, prepayMonth: 4, prepayEffect: 'tenure' },
+        education: { amount: 300000, rate: 9.0, tenureYrs: 6, startMonth: 7, prepay: false, prepayAmt: 50000,
+          prepayStartYr: 2, prepayMonth: 4, prepayEffect: 'tenure', moratorium: true, govtSubsidy: true,
+          moratoriumInterestAdd: false },
+        car: { amount: 500000, rate: 9.0, tenureYrs: 5, startMonth: 0, prepay: false, prepayAmt: 60000, prepayStartYr: 2,
+          prepayMonth: 1, prepayEffect: 'tenure' },
+        bike: { amount: 120000, rate: 11.0, tenureYrs: 3, startMonth: 0, prepay: false, prepayAmt: 24000,
+          prepayStartYr: 1, prepayMonth: 6, prepayEffect: 'tenure' },
+      };
+
+      let activeLoan = 'home';
+      let schedules = {};
+      let yrDataCache = {};
+      let origBaseIntCache = {};
+
+      function computeFullSchedule(type) {
+        const s = loanState[type];
+        const P = s.amount;
+        const rate = s.rate;
+        const yrs = s.tenureYrs;
+        const startRaw = s.startMonth;
+        const ppOn = s.prepay;
+        const ppAmt = s.ppAmt;
+        const ppStartY = s.ppStartYr;
+        const ppMon = s.ppMonth;
+        const ppEff = s.ppEffect;
+        const moratorium = s.moratorium || false;
+        const govtSubsidy = s.govtSubsidy || false;
+        const moratoriumInterestAdd = s.moratoriumInterestAdd || false;
+
+        if (P <= 0 || yrs <= 0) {
+          schedules[type] = [];
+          yrDataCache[type] = [];
+          origBaseIntCache[type] = 0;
+          return;
+        }
+
+        const r = rate / 100 / 12;
+        const n = yrs * 12;
+        let effectiveP = P;
+
+        if (moratorium && moratoriumInterestAdd && !govtSubsidy) {
+          const morMonths = 18;
+          for (let i = 0; i < morMonths; i++) effectiveP += effectiveP * r;
+        }
+
+        const baseEMI = emi(effectiveP, r, n);
+        origBaseIntCache[type] = baseEMI * n - effectiveP;
+
+        let calMon = startRaw % 12;
+        let calYr = 2026 + Math.floor(startRaw / 12);
+
+        let sched = [];
+        let bal = effectiveP,
+          lYr = 1,
+          mInYr = 1,
+          curEMI = baseEMI;
+
+        for (let i = 1; i <= n && bal > 0.5; i++) {
+          const openBal = bal;
+          const intPart = bal * r;
+          let prinPart = curEMI - intPart;
+          if (prinPart > bal) prinPart = bal;
+          let extra = 0;
+          const cal1 = calMon + 1;
+          if (ppOn && lYr >= ppStartY && cal1 === ppMon) {
+            extra = Math.min(ppAmt, Math.max(0, bal - prinPart));
+          }
+          bal = Math.max(0, bal - prinPart - extra);
+          sched.push({
+            idx: i,
+            lYr,
+            calMon,
+            calYr,
+            openBal,
+            emi: Math.min(curEMI, openBal + intPart),
+            prin: prinPart,
+            int: intPart,
+            extra,
+            closeBal: bal,
+            cumPrin: (effectiveP - bal),
+            paidPct: ((effectiveP - bal) / effectiveP * 100)
+          });
+          calMon = (calMon + 1) % 12;
+          if (calMon === 0) calYr++;
+          mInYr++;
+          if (mInYr > 12) { mInYr = 1;
+            lYr++; }
+          if (bal <= 0.5) break;
+          if (ppOn && extra > 0 && ppEff === 'emi') {
+            const rem = n - i;
+            if (rem > 0) curEMI = emi(bal, r, rem);
+          }
+        }
+        schedules[type] = sched;
+
+        const ym = {};
+        sched.forEach(row => {
+          if (!ym[row.lYr]) ym[row.lYr] = { lYr: row.lYr, calYr: row.calYr, emi: 0, prin: 0, int: 0, extra: 0,
+            closeBal: 0 };
+          const y = ym[row.lYr];
+          y.emi += row.emi;
+          y.prin += row.prin;
+          y.int += row.int;
+          y.extra += row.extra;
+          y.closeBal = row.closeBal;
+        });
+        yrDataCache[type] = Object.values(ym);
+      }
+
+      function recalcAll() {
+        LOAN_TYPES.forEach(type => {
+          if (type === 'total') return;
+          computeFullSchedule(type);
+        });
+        renderActiveLoan();
+      }
+
+      function populateMonths(id, selected) {
+        const sel = document.getElementById(id);
+        if (!sel) return;
+        sel.innerHTML = '';
+        for (let y = 0; y < 3; y++)
+          for (let m = 0; m < 12; m++) {
+            const v = y * 12 + m,
+              o = document.createElement('option');
+            o.value = v;
+            o.textContent = MN[m] + ' ' + (2026 + y);
+            if (v === selected) o.selected = true;
+            sel.appendChild(o);
+          }
+      }
+
+      function renderDonut(principal, totInt, totExtra, totPaid) {
+        if (totPaid <= 0)
+          return '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="none" stroke="var(--sur3)" stroke-width="13"/></svg><div class="donut-ctr"><div class="d-big">0%</div></div>';
+        const C = 2 * Math.PI * 38;
+        const pPc = principal / totPaid;
+        const iPc = totInt / totPaid;
+        const ePc = totExtra / totPaid;
+        return `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="38" fill="none" stroke-width="13" stroke="var(--sur3)"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke-width="13" stroke="var(--ac)" stroke-dasharray="${pPc*C} ${C}"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke-width="13" stroke="var(--rd)" stroke-dasharray="${iPc*C} ${C}" stroke-dashoffset="${-pPc*C}" opacity=".82"/>
+          ${totExtra>0?`<circle cx="50" cy="50" r="38" fill="none" stroke-width="13" stroke="var(--am)" stroke-dasharray="${ePc*C} ${C}" stroke-dashoffset="${-(pPc+iPc)*C}" opacity=".88"/>`:''}
+        </svg>
+        <div class="donut-ctr"><div class="d-big">${Math.round(iPc*100)}%</div><div class="d-sm">interest</div></div>`;
+      }
+
+      function renderLoanView(type) {
+        const sched = schedules[type] || [];
+        const yrData = yrDataCache[type] || [];
+        const s = loanState[type];
+        const P = s.amount;
+        const baseEMI = sched.length > 0 ? emi(sched[0].openBal, s.rate / 100 / 12, s.tenureYrs * 12) : 0;
+        const totInt = sched.reduce((a, r) => a + r.int, 0);
+        const totExtra = sched.reduce((a, r) => a + r.extra, 0);
+        const totEMI = sched.reduce((a, r) => a + r.emi, 0);
+        const totPaid = totEMI + totExtra;
+        const actM = sched.length;
+        const origInt = origBaseIntCache[type] || 0;
+        const showPP = s.prepay && totExtra > 0;
+
+        return `
+        <div class="page">
+          <aside class="sidebar">
+            <div class="sb-head">
+              <div class="logo">${type.charAt(0).toUpperCase()+type.slice(1)} <em>Loan</em></div>
+            </div>
+            <div class="sb-sec">
+              <div class="sec-lbl">Loan Details</div>
+              <div class="field"><div class="fl">Loan Amount <span class="v" id="lv-amt-${type}">${fmtC(P)}</span></div><div class="inp-row"><div class="pfx">₹</div><input type="number" id="loanAmt-${type}" value="${P}" min="0" step="5000" oninput="onInput('${type}')"></div></div>
+              <div class="field"><div class="fl">Annual Interest Rate <span class="v" id="lv-rate-${type}">${s.rate.toFixed(2)}%</span></div>
+                <div class="inp-row" style="margin-bottom:6px;"><input type="range" id="rateSlider-${type}" min="5" max="20" step="0.05" value="${s.rate}" oninput="syncRate('${type}',this.value)"><div class="sfx" id="rateDisp-${type}" style="min-width:50px;justify-content:center;">${s.rate.toFixed(2)}%</div></div>
+                <div class="inp-row"><input type="number" id="rateNum-${type}" value="${s.rate}" min="1" max="25" step="0.05" oninput="syncRate('${type}',this.value)"><div class="sfx">% p.a.</div></div>
+              </div>
+              <div class="field"><div class="fl">Loan Tenure <span class="v" id="lv-tenure-${type}">${s.tenureYrs} years</span></div><div class="inp-row"><input type="range" id="tenureSlider-${type}" min="1" max="30" step="1" value="${s.tenureYrs}" oninput="syncTenure('${type}',this.value)"><div class="sfx" id="tenureDisp-${type}" style="min-width:44px;justify-content:center;">${s.tenureYrs} yr</div></div></div>
+              <div class="field"><div class="fl">EMI Start Month</div><div class="inp-row"><select id="startMonth-${type}" onchange="calc('${type}')"></select></div></div>
+            </div>
+            <div class="sb-sec">
+              <div class="toggle-row"><span class="tg-lbl">Prepayment / Extra Payment</span><label class="sw"><input type="checkbox" id="ppOn-${type}" ${s.prepay?'checked':''} onchange="togglePP('${type}')"><div class="sw-tr"></div><div class="sw-th"></div></label></div>
+              <div class="pp-body" id="ppBody-${type}" style="display:${s.prepay?'block':'none'}">
+                <div class="field"><div class="fl">Extra Amount Per Year <span class="v" id="lv-pamt-${type}">${fmt(s.ppAmt)}</span></div><div class="inp-row"><div class="pfx">₹</div><input type="number" id="ppAmt-${type}" value="${s.ppAmt}" min="0" step="5000" oninput="onInput('${type}')"></div></div>
+                <div class="field"><div class="fl">Start Prepayment From Year</div><div class="inp-row"><input type="number" id="ppStartYr-${type}" value="${s.ppStartYr}" min="1" max="30" step="1" oninput="onInput('${type}')"><div class="sfx">yr</div></div></div>
+                <div class="field"><div class="fl">Prepayment In Which Month</div><div class="inp-row"><select id="ppMonth-${type}" onchange="calc('${type}')">${MF.map((m,i)=>`<option value="${i+1}" ${s.ppMonth===i+1?'selected':''}>${m}</option>`).join('')}</select></div></div>
+                <div class="field"><div class="fl">Prepayment Reduces</div><div class="inp-row"><select id="ppEffect-${type}" onchange="calc('${type}')"><option value="tenure" ${s.ppEffect==='tenure'?'selected':''}>Tenure — close loan faster</option><option value="emi" ${s.ppEffect==='emi'?'selected':''}>EMI — lower monthly payment</option></select></div></div>
+                <div class="imp-grid">
+                  <div class="imp-card"><div class="ic-lbl">Original Tenure</div><div class="ic-val rd" id="i-ot-${type}">${fmtT(s.tenureYrs*12)}</div></div>
+                  <div class="imp-card"><div class="ic-lbl">New Tenure</div><div class="ic-val gr" id="i-nt-${type}">${fmtT(actM)}</div></div>
+                  <div class="imp-card"><div class="ic-lbl">Time Saved</div><div class="ic-val ac" id="i-ts-${type}">${fmtT(Math.max(0,s.tenureYrs*12-actM))}</div></div>
+                  <div class="imp-card"><div class="ic-lbl">Interest Saved</div><div class="ic-val gr" id="i-is-${type}">${fmtC(Math.max(0,origInt-totInt))}</div></div>
+                  <div class="imp-card"><div class="ic-lbl">Total Prepaid</div><div class="ic-val am" id="i-tp-${type}">${fmtC(totExtra)}</div></div>
+                  <div class="imp-card"><div class="ic-lbl">New Total Cost</div><div class="ic-val pu" id="i-nc-${type}">${fmtC(totPaid)}</div></div>
+                </div>
+                <div class="save-strip ${showPP?'show':''}" id="saveStrip-${type}">${showPP?`Prepaying <strong>${fmtC(s.ppAmt)}/yr</strong> from Year ${s.ppStartYr} saves <strong>${fmtC(Math.max(0,origInt-totInt))}</strong> in interest and closes loan <strong>${fmtT(Math.max(0,s.tenureYrs*12-actM))} earlier</strong>.`:''}</div>
+              </div>
+            </div>
+          </aside>
+          <main class="main">
+            <div class="metrics">
+              <div class="mc bl"><div class="mc-lbl">Monthly EMI</div><div class="mc-val bl" id="m-emi-${type}">${fmtC(baseEMI)}</div><div class="mc-sub">${s.prepay&&s.ppEffect==='emi'?'Reduces after prepay':'Fixed outflow'}</div></div>
+              <div class="mc gr"><div class="mc-lbl">Principal</div><div class="mc-val gr">${fmtC(P)}</div><div class="mc-sub">Loan amount</div></div>
+              <div class="mc rd"><div class="mc-lbl">Total Interest</div><div class="mc-val rd">${fmtC(totInt)}</div><div class="mc-sub">${showPP?`Saved ${fmtC(origInt-totInt)}`:'Over lifetime'}</div></div>
+              <div class="mc am"><div class="mc-lbl">Total Payable</div><div class="mc-val am">${fmtC(totPaid)}</div><div class="mc-sub">Principal + Interest</div></div>
+            </div>
+            <div class="scard">
+              <div class="scard-title">Principal vs Interest Overview</div>
+              <div class="donut-row">
+                <div class="donut-wrap">${renderDonut(P, totInt, totExtra, totPaid)}</div>
+                <div class="leg-list">
+                  <div class="leg-item"><div class="leg-dot" style="background:var(--ac)"></div><div><div class="leg-name">Principal</div><span class="leg-val">${fmtC(P)}</span> <span class="leg-pct">(${Math.round(P/totPaid*100)}%)</span></div></div>
+                  <div class="leg-item"><div class="leg-dot" style="background:var(--rd);opacity:.82"></div><div><div class="leg-name">Total Interest</div><span class="leg-val">${fmtC(totInt)}</span> <span class="leg-pct">(${Math.round(totInt/totPaid*100)}%)</span></div></div>
+                  ${totExtra>0?`<div class="leg-item"><div class="leg-dot" style="background:var(--am)"></div><div><div class="leg-name">Total Prepaid</div><span class="leg-val">${fmtC(totExtra)}</span> <span class="leg-pct">(${Math.round(totExtra/totPaid*100)}%)</span></div></div>`:''}
+                  <div class="leg-item"><div class="leg-dot" style="background:var(--sur4);border:1px solid var(--bd2)"></div><div><div class="leg-name">Total Payable</div><span class="leg-val">${fmtC(totPaid)}</span></div></div>
+                  <div style="margin-top:6px;"><div class="prog-lbl"><span>Completion</span><span>${fmtT(actM)}</span></div><div class="prog-track"><div class="prog-fill" style="width:${Math.min(100,actM/(s.tenureYrs*12)*100)}%"></div></div><div class="prog-note">Closes: ${sched.length>0?MN[sched[sched.length-1].calMon]+' '+sched[sched.length-1].calYr:'—'}</div></div>
+                </div>
+              </div>
+              <div class="scard-title">Year-wise Principal vs Interest</div>
+              <div class="bar-legend">
+                <div class="bl-i"><div class="bl-dot" style="background:var(--ac);opacity:.85"></div>Principal</div>
+                <div class="bl-i"><div class="bl-dot" style="background:var(--rd);opacity:.7"></div>Interest</div>
+                ${totExtra>0?`<div class="bl-i"><div class="bl-dot" style="background:var(--am);opacity:.8"></div>Prepayment</div>`:''}
+              </div>
+              <div>${yrData.map(d=>{const mx=Math.max(...yrData.map(x=>x.prin+x.int+x.extra),1);return `<div class="bar-row"><div class="bar-yr">Y${d.lYr}</div><div class="bar-track" title="Principal:${fmt(d.prin)} Interest:${fmt(d.int)}${d.extra>0?' Prepaid:'+fmt(d.extra):''}"><div class="b-p" style="width:${(d.prin/mx*100).toFixed(1)}%"></div><div class="b-i" style="width:${(d.int/mx*100).toFixed(1)}%"></div>${d.extra>0?`<div class="b-e" style="width:${(d.extra/mx*100).toFixed(1)}%"></div>`:''}</div></div>`;}).join('')}</div>
+            </div>
+            <div class="scard">
+              <div class="scard-title">Amortization Schedule</div>
+              <div class="tabs"><button class="tab active" onclick="switchTab('${type}','monthly',this)">Month-wise</button><button class="tab" onclick="switchTab('${type}','yearly',this)">Year-wise Summary</button></div>
+              <div class="tab-pane active" id="pane-monthly-${type}">
+                <div class="flt-row"><label>Year:</label><select class="flt-sel" id="yrFilter-${type}" onchange="onYrFilter('${type}')"><option value="all">All Years</option>${[...new Set(sched.map(r=>r.calYr))].map(y=>`<option value="${y}">${y}</option>`).join('')}</select><label>Month:</label><select class="flt-sel" id="mFilter-${type}" onchange="renderMonthly('${type}')"><option value="all">All Months</option></select><span class="badge" id="rowBadge-${type}">${sched.length} rows</span></div>
+                <div class="tbl-wrap"><table><thead><tr><th>Month</th><th>Opening Balance</th><th>EMI Paid</th><th>→ Principal</th><th>→ Interest</th><th>Prepayment</th><th>Closing Balance</th><th>Loan Paid %</th></tr></thead><tbody id="tBody-${type}"></tbody></table></div>
+              </div>
+              <div class="tab-pane" id="pane-yearly-${type}">
+                <div class="tbl-wrap"><table><thead><tr><th>Year</th><th>EMI Paid</th><th>Principal Paid</th><th>Interest Paid</th><th>Prepayment</th><th>Year-End Balance</th><th>Cumulative Paid %</th></tr></thead><tbody id="yBody-${type}"></tbody></table></div>
+              </div>
+            </div>
+          </main>
+        </div>`;
+      }
+
+      function renderTotalDashboard() {
+        const loans = ['home', 'education', 'car', 'bike'];
+        const summaries = loans.map(type => {
+          const sched = schedules[type] || [];
+          const s = loanState[type];
+          if (s.amount <= 0 || sched.length === 0) return null;
+          const totInt = sched.reduce((a, r) => a + r.int, 0);
+          const totExtra = sched.reduce((a, r) => a + r.extra, 0);
+          const totEMI = sched.reduce((a, r) => a + r.emi, 0);
+          return { type, emi: emi(sched[0]?.openBal||s.amount, s.rate/100/12, s.tenureYrs*12), int: totInt, extra: totExtra,
+            paid: totEMI + totExtra, principal: s.amount, sched };
+        }).filter(Boolean);
+
+        if (summaries.length === 0) {
+          return `<div class="page"><div class="main" style="grid-column:1/-1;text-align:center;padding:40px;"><h2>No active loans</h2><p style="color:var(--tx3)">Add details to see combined dashboard.</p></div></div>`;
+        }
+
+        const totalEMI = summaries.reduce((s, x) => s + x.emi, 0);
+        const totalInt = summaries.reduce((s, x) => s + x.int, 0);
+        const totalPaid = summaries.reduce((s, x) => s + x.paid, 0);
+        const totalPrincipal = summaries.reduce((s, x) => s + x.principal, 0);
+        const totalExtra = summaries.reduce((s, x) => s + x.extra, 0);
+        const allYears = new Set();
+        summaries.forEach(s => s.sched.forEach(r => allYears.add(r.calYr)));
+        const sortedYears = [...allYears].sort((a, b) => a - b);
+        const yearStack = sortedYears.map(y => {
+          let p = 0,
+            i = 0,
+            e = 0;
+          summaries.forEach(s => { s.sched.filter(r => r.calYr === y).forEach(r => { p += r.prin;
+              i += r.int;
+              e += r.extra; }); });
+          return { year: y, prin: p, int: i, extra: e };
+        });
+        const maxStack = Math.max(...yearStack.map(d => d.prin + d.int + d.extra), 1);
+        const firstFree = summaries.reduce((a, b) => a.sched.length < b.sched.length ? a : b);
+
+        return `
+        <div class="page">
+          <main class="main" style="grid-column:1/-1;">
+            <div class="metrics">
+              <div class="mc bl"><div class="mc-lbl">Combined EMI</div><div class="mc-val bl">${fmtC(totalEMI)}</div><div class="mc-sub">Monthly outflow</div></div>
+              <div class="mc gr"><div class="mc-lbl">Total Principal</div><div class="mc-val gr">${fmtC(totalPrincipal)}</div><div class="mc-sub">All loans</div></div>
+              <div class="mc rd"><div class="mc-lbl">Total Interest</div><div class="mc-val rd">${fmtC(totalInt)}</div><div class="mc-sub">Over lifetime</div></div>
+              <div class="mc am"><div class="mc-lbl">Total Payable</div><div class="mc-val am">${fmtC(totalPaid)}</div><div class="mc-sub">Principal + Interest</div></div>
+            </div>
+            <div class="total-summary-grid">
+              <div class="scard">
+                <div class="scard-title">Portfolio Donut</div>
+                <div class="donut-row">
+                  <div class="donut-wrap">${renderDonut(totalPrincipal, totalInt, totalExtra, totalPaid)}</div>
+                  <div class="leg-list">
+                    ${summaries.map(s=>`<div class="leg-item"><div class="leg-dot" style="background:var(--ac)"></div><div><div class="leg-name">${s.type.toUpperCase()}</div><span class="leg-val">EMI ${fmtC(s.emi)}</span></div></div>`).join('')}
+                  </div>
+                </div>
+              </div>
+              <div class="scard">
+                <div class="scard-title">Debt-Free Timeline</div>
+                ${summaries.map(s=>{const last=s.sched[s.sched.length-1];return`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);"><span style="font-weight:500;">${s.type.toUpperCase()}</span><span>${MN[last.calMon]} ${last.calYr} (${s.sched.length}m)</span></div>`;}).join('')}
+                <div style="margin-top:8px;color:var(--ac);font-weight:600;">First debt-free: ${firstFree.type.toUpperCase()} in ${MN[firstFree.sched[firstFree.sched.length-1].calMon]} ${firstFree.sched[firstFree.sched.length-1].calYr}</div>
+              </div>
+            </div>
+            <div class="scard">
+              <div class="scard-title">Multi-Loan Year Stack</div>
+              <div class="bar-legend"><div class="bl-i"><div class="bl-dot" style="background:var(--ac);opacity:.85"></div>Principal</div><div class="bl-i"><div class="bl-dot" style="background:var(--rd);opacity:.7"></div>Interest</div>${totalExtra>0?`<div class="bl-i"><div class="bl-dot" style="background:var(--am);opacity:.8"></div>Prepayment</div>`:''}</div>
+              ${yearStack.map(d=>{const pw=(d.prin/maxStack*100).toFixed(1),iw=(d.int/maxStack*100).toFixed(1),ew=(d.extra/maxStack*100).toFixed(1);return`<div class="bar-row"><div class="bar-yr">${d.year}</div><div class="bar-track"><div class="b-p" style="width:${pw}%"></div><div class="b-i" style="width:${iw}%"></div>${d.extra>0?`<div class="b-e" style="width:${ew}%"></div>`:''}</div></div>`;}).join('')}
+            </div>
+            <div class="scard">
+              <div class="scard-title">Loan-wise EMI Distribution</div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;">${summaries.map(s=>{const pct=Math.round(s.emi/totalEMI*100);return`<div style="flex:1;min-width:120px;background:var(--sur2);border-radius:var(--rs);padding:12px;text-align:center;"><div style="font-weight:600;">${s.type.toUpperCase()}</div><div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;">${fmtC(s.emi)}</div><div class="prog-track" style="margin-top:6px;"><div class="prog-fill" style="width:${pct}%;background:var(--ac);"></div></div><div style="font-size:10px;color:var(--tx3);">${pct}% of total</div></div>`;}).join('')}</div>
+            </div>
+          </main>
+        </div>`;
+      }
+
+      function renderActiveLoan() {
+        if (activeLoan === 'total') {
+          document.getElementById('dashboardContent').innerHTML = renderTotalDashboard();
+        } else {
+          document.getElementById('dashboardContent').innerHTML = renderLoanView(activeLoan);
+          populateMonths('startMonth-' + activeLoan, loanState[activeLoan].startMonth);
+          updateMonthFilter(activeLoan);
+          renderMonthly(activeLoan);
+          renderYearly(activeLoan);
+        }
+      }
+
+      window.syncRate = function(type, v) {
+        v = parseFloat(v) || 8;
+        v = Math.min(25, Math.max(1, v));
+        document.getElementById('rateSlider-' + type).value = v;
+        document.getElementById('rateNum-' + type).value = v;
+        document.getElementById('rateDisp-' + type).textContent = v.toFixed(2) + '%';
+        document.getElementById('lv-rate-' + type).textContent = v.toFixed(2) + '%';
+        loanState[type].rate = v;
+        calc(type);
+      };
+      window.syncTenure = function(type, v) {
+        v = parseInt(v) || 5;
+        document.getElementById('tenureSlider-' + type).value = v;
+        document.getElementById('tenureDisp-' + type).textContent = v + ' yr';
+        document.getElementById('lv-tenure-' + type).textContent = v + ' year' + (v > 1 ? 's' : '');
+        loanState[type].tenureYrs = v;
+        calc(type);
+      };
+      window.onInput = function(type) {
+        const a = parseFloat(document.getElementById('loanAmt-' + type).value) || 0;
+        const p = parseFloat(document.getElementById('ppAmt-' + type).value) || 0;
+        document.getElementById('lv-amt-' + type).textContent = fmtC(a);
+        document.getElementById('lv-pamt-' + type).textContent = fmt(p);
+        loanState[type].amount = a;
+        loanState[type].ppAmt = p;
+        calc(type);
+      };
+      window.togglePP = function(type) {
+        document.getElementById('ppBody-' + type).classList.toggle('open', document.getElementById('ppOn-' + type)
+          .checked);
+        loanState[type].prepay = document.getElementById('ppOn-' + type).checked;
+        calc(type);
+      };
+      window.calc = function(type) {
+        const s = loanState[type];
+        s.amount = parseFloat(document.getElementById('loanAmt-' + type)?.value) || s.amount;
+        s.rate = parseFloat(document.getElementById('rateNum-' + type)?.value) || s.rate;
+        s.tenureYrs = parseInt(document.getElementById('tenureSlider-' + type)?.value) || s.tenureYrs;
+        s.startMonth = parseInt(document.getElementById('startMonth-' + type)?.value) || s.startMonth;
+        s.prepay = document.getElementById('ppOn-' + type)?.checked || false;
+        s.ppAmt = parseFloat(document.getElementById('ppAmt-' + type)?.value) || s.ppAmt;
+        s.ppStartYr = parseInt(document.getElementById('ppStartYr-' + type)?.value) || s.ppStartYr;
+        s.ppMonth = parseInt(document.getElementById('ppMonth-' + type)?.value) || s.ppMonth;
+        s.ppEffect = document.getElementById('ppEffect-' + type)?.value || s.ppEffect;
+        computeFullSchedule(type);
+        renderActiveLoan();
+      };
+      window.onYrFilter = function(type) { updateMonthFilter(type);
+        renderMonthly(type); };
+      window.updateMonthFilter = function(type) {
+        const yr = document.getElementById('yrFilter-' + type)?.value;
+        const sched = schedules[type] || [];
+        const rows = yr === 'all' ? sched : sched.filter(r => r.calYr == yr);
+        const mons = [...new Set(rows.map(r => r.calMon))].sort((a, b) => a - b);
+        const msel = document.getElementById('mFilter-' + type);
+        if (!msel) return;
+        msel.innerHTML = '<option value="all">All Months</option>';
+        mons.forEach(m => { const o = document.createElement('option');
+          o.value = m;
+          o.textContent = MF[m];
+          msel.appendChild(o); });
+      };
+      window.renderMonthly = function(type) {
+        const yr = document.getElementById('yrFilter-' + type)?.value;
+        const mo = document.getElementById('mFilter-' + type)?.value;
+        const sched = schedules[type] || [];
+        let rows = yr === 'all' ? sched : sched.filter(r => r.calYr == yr);
+        if (mo !== 'all') rows = rows.filter(r => r.calMon == mo);
+        const badge = document.getElementById('rowBadge-' + type);
+        if (badge) badge.textContent = rows.length + ' rows';
+        const showYrHead = yr === 'all';
+        let prevYr = null;
+        const tbody = document.getElementById('tBody-' + type);
+        if (!tbody) return;
+        tbody.innerHTML = rows.map(row => {
+          const nh = showYrHead && row.calYr !== prevYr;
+          prevYr = row.calYr;
+          const head = nh ?
+            `<tr class="yr-head"><td colspan="8">── ${row.calYr} &nbsp;·&nbsp; Loan Year ${row.lYr}</td></tr>` :
+            '';
+          const pp = row.extra > 0;
+          return head + `<tr class="${pp?'pp-row':''}"><td>${MN[row.calMon]} ${row.calYr}${pp?' ⚡':''}</td><td class="t-b">${fmt(row.openBal)}</td><td>${fmt(row.emi)}</td><td class="t-p">${fmt(row.prin)}</td><td class="t-i">${fmt(row.int)}</td><td class="t-e">${row.extra>0?fmt(row.extra):'—'}</td><td class="t-b">${fmt(row.closeBal)}</td><td class="t-g">${row.paidPct.toFixed(1)}%</td></tr>`;
+        }).join('') || '<tr><td colspan="8" style="text-align:center;color:var(--tx3);padding:20px;">No data</td></tr>';
+      };
+      window.renderYearly = function(type) {
+        const yrData = yrDataCache[type] || [];
+        const P = loanState[type].amount;
+        let cum = 0;
+        const tbody = document.getElementById('yBody-' + type);
+        if (!tbody) return;
+        tbody.innerHTML = yrData.map(d => {
+          cum += d.prin + d.extra;
+          const pct = Math.min(100, cum / P * 100).toFixed(1);
+          return `<tr><td>Year ${d.lYr} <span style="color:var(--tx3);font-size:10px;">(${d.calYr})</span></td><td>${fmt(d.emi)}</td><td class="t-p">${fmt(d.prin)}</td><td class="t-i">${fmt(d.int)}</td><td class="t-e">${d.extra>0?fmt(d.extra):'—'}</td><td class="t-b">${fmt(d.closeBal)}</td><td class="t-g">${pct}%</td></tr>`;
+        }).join('');
+      };
+      window.switchTab = function(type, id, btn) {
+        document.querySelectorAll('#pane-monthly-' + type + ', #pane-yearly-' + type).forEach(p => p.classList.remove(
+          'active'));
+        document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+        document.getElementById('pane-' + id + '-' + type).classList.add('active');
+        btn.classList.add('active');
+      };
+
+      function switchLoan(type) {
+        activeLoan = type;
+        document.querySelectorAll('.loan-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector(`.loan-tab[data-type="${type}"]`).classList.add('active');
+        recalcAll();
+      }
+
+      window.onload = () => {
+        const tabContainer = document.getElementById('loanTabs');
+        LOAN_TYPES.forEach(t => {
+          const btn = document.createElement('button');
+          btn.className = `loan-tab ${t==='home'?'active':''}`;
+          btn.dataset.type = t;
+          btn.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+          btn.addEventListener('click', () => switchLoan(t));
+          tabContainer.appendChild(btn);
+        });
+        recalcAll();
+      };
+    })();
+  </script>
+</body>
+</html>
